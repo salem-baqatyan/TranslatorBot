@@ -143,18 +143,6 @@ def get_request_record(req_id: str):
 
 # --- ترجمة النصوص الذكية (محدثة) ---
 async def translate_smart_preserve_format(text: str, target_lang: str) -> str:
-    """
-    ترجمة ذكية مع عدة محاولات احتياطية.
-
-    تستخدمها:
-    - Translate to My Language
-    - !t
-    - !t <language_code>
-
-    مهم:
-    بعض خدمات الترجمة قد ترجع رسالة خطأ كنص بدل رفع Exception.
-    لذلك يتم فحص النتيجة قبل اعتبارها ترجمة ناجحة.
-    """
 
     if not text or not text.strip():
         return text
@@ -830,10 +818,18 @@ class ProfileManageView(discord.ui.View):
 # ================
 @bot.event
 async def on_ready():
+    # تحميل الكوج الخاص باللغات/الألعاب السابق
     try:
         await bot.load_extension("games")
     except Exception as e:
-        print(f"⚠️ Extension load status: {e}")
+        print(f"⚠️ Extension 'games' load status: {e}")
+
+    # تحميل كوج أحداث سكاي الجديد
+    try:
+        await bot.load_extension("sky_events")
+        print("✅ SkyEvents Cog loaded successfully!")
+    except Exception as e:
+        print(f"⚠️ Extension 'sky_events' load status: {e}")
 
     bot.add_view(LanguageButtonView())
     await bot.tree.sync()

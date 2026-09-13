@@ -230,11 +230,24 @@ class SkyEvents(commands.Cog):
                 alert_key = f"shard_start_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
                 if alert_key not in self.sent_alerts:
                     embed = discord.Embed(
-                        title=f"🌋 ثوران الشظايا — [Start 🟢]",
-                        description=f"بدأ ثوران الشظايا الآن في **{shard_info.get('area')}** ({shard_info.get('realm')})!",
-                        color=discord.Color.red(),
+                        title="🌋 ثوران الشظايا │ 🟢 Start",
+                        description="بدأ ثوران الشظايا الآن!",
+                        color=discord.Color.green(),
                         timestamp=now_utc
                     )
+
+                    embed.add_field(
+                        name="🌍 العالم (Realm)",
+                        value=shard_info.get("realm", "غير محدد"),
+                        inline=True,
+                    )
+
+                    embed.add_field(
+                        name="📍 المنطقة (Area)",
+                        value=shard_info.get("area", "غير محدد"),
+                        inline=True,
+                    )
+
                     await channel.send(embed=embed)
                     self.sent_alerts.add(alert_key)
 
@@ -244,7 +257,7 @@ class SkyEvents(commands.Cog):
                     embed = discord.Embed(
                         title=f"🌋 ثوران الشظايا — [End 🔴]",
                         description=f"انتهى ثوران الشظايا الآن.",
-                        color=discord.Color.dark_gray(),
+                        color=discord.Color.red(),
                         timestamp=now_utc
                     )
                     await channel.send(embed=embed)
@@ -409,7 +422,7 @@ class SkyEvents(commands.Cog):
         name_en = event.get("name_en", "Event")
 
         embed = discord.Embed(
-            title=f"{event.get('icon', '✨')} {name_ar} • {name_en} — [{status_title}]",
+            title=f"{event.get('icon', '✨')} {name_ar} • {name_en} │ {status_title}",
             description=description,
             color=color,
             timestamp=datetime.now(timezone.utc),

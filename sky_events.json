@@ -6,7 +6,7 @@
   "interval_events": [
     {
       "id": "geyser",
-      "name_ar": "الينبوع الملوث",
+      "name_ar": "الينبوع",
       "name_en": "Polluted Geyser",
       "realm": "Daylight Prairie",
       "area": "Sanctuary Islands",
@@ -18,7 +18,7 @@
     },
     {
       "id": "grandma",
-      "name_ar": "عشاء الجدة",
+      "name_ar": "الجدة",
       "name_en": "Grandma's Dinner",
       "realm": "Hidden Forest",
       "area": "Elevated Clearing",

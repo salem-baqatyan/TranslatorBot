@@ -1,0 +1,410 @@
+{
+  "config": {
+    "shards_channel_id": 123456789012345678
+  },
+  "schedule": {
+    "1": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Daylight Prairie",
+      "area": "Prairie Caves",
+      "rewards": "2 Ascended Candles",
+      "no_shard_days": ["Monday", "Tuesday"],
+      "windows": [
+        {"start_offset_minutes": 48, "end_offset_minutes": 280},
+        {"start_offset_minutes": 408, "end_offset_minutes": 640},
+        {"start_offset_minutes": 768, "end_offset_minutes": 1000}
+      ]
+    },
+    "2": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Hidden Forest",
+      "area": "Boneyard",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "3": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Valley of Triumph",
+      "area": "Village of Dreams",
+      "rewards": "2.5 Ascended Candles",
+      "no_shard_days": ["Tuesday", "Wednesday"],
+      "windows": [
+        {"start_offset_minutes": 128, "end_offset_minutes": 360},
+        {"start_offset_minutes": 488, "end_offset_minutes": 720},
+        {"start_offset_minutes": 848, "end_offset_minutes": 1080}
+      ]
+    },
+    "4": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Golden Wasteland",
+      "area": "Broken Temple",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "5": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Vault of Knowledge",
+      "area": "Jellyfish Cove",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Wednesday", "Thursday"],
+      "windows": [
+        {"start_offset_minutes": 198, "end_offset_minutes": 430},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 918, "end_offset_minutes": 1150}
+      ]
+    },
+    "6": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Daylight Prairie",
+      "area": "Prairie Village",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "7": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Hidden Forest",
+      "area": "Sacred Pond",
+      "rewards": "2.5 Ascended Candles",
+      "no_shard_days": ["Monday", "Tuesday"],
+      "windows": [
+        {"start_offset_minutes": 48, "end_offset_minutes": 280},
+        {"start_offset_minutes": 408, "end_offset_minutes": 640},
+        {"start_offset_minutes": 768, "end_offset_minutes": 1000}
+      ]
+    },
+    "8": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Valley of Triumph",
+      "area": "Frozen Lake",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "9": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Golden Wasteland",
+      "area": "Crab Fields",
+      "rewards": "2.5 Ascended Candles",
+      "no_shard_days": ["Tuesday", "Wednesday"],
+      "windows": [
+        {"start_offset_minutes": 128, "end_offset_minutes": 360},
+        {"start_offset_minutes": 488, "end_offset_minutes": 720},
+        {"start_offset_minutes": 848, "end_offset_minutes": 1080}
+      ]
+    },
+    "10": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Vault of Knowledge",
+      "area": "Starlight Desert",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "11": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Daylight Prairie",
+      "area": "Sanctuary Islands",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Wednesday", "Thursday"],
+      "windows": [
+        {"start_offset_minutes": 198, "end_offset_minutes": 430},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 918, "end_offset_minutes": 1150}
+      ]
+    },
+    "12": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Hidden Forest",
+      "area": "Forest Brook",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "13": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Valley of Triumph",
+      "area": "Village of Dreams",
+      "rewards": "2.5 Ascended Candles",
+      "no_shard_days": ["Monday", "Tuesday"],
+      "windows": [
+        {"start_offset_minutes": 48, "end_offset_minutes": 280},
+        {"start_offset_minutes": 408, "end_offset_minutes": 640},
+        {"start_offset_minutes": 768, "end_offset_minutes": 1000}
+      ]
+    },
+    "14": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Golden Wasteland",
+      "area": "Battlefield",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "15": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Vault of Knowledge",
+      "area": "Jellyfish Cove",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Tuesday", "Wednesday"],
+      "windows": [
+        {"start_offset_minutes": 128, "end_offset_minutes": 360},
+        {"start_offset_minutes": 488, "end_offset_minutes": 720},
+        {"start_offset_minutes": 848, "end_offset_minutes": 1080}
+      ]
+    },
+    "16": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Daylight Prairie",
+      "area": "Butterfly Fields",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "17": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Hidden Forest",
+      "area": "Elevated Clearing",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Wednesday", "Thursday"],
+      "windows": [
+        {"start_offset_minutes": 198, "end_offset_minutes": 430},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 918, "end_offset_minutes": 1150}
+      ]
+    },
+    "18": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Valley of Triumph",
+      "area": "Frozen Lake",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "19": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Golden Wasteland",
+      "area": "Graveyard",
+      "rewards": "2 Ascended Candles",
+      "no_shard_days": ["Monday", "Tuesday"],
+      "windows": [
+        {"start_offset_minutes": 48, "end_offset_minutes": 280},
+        {"start_offset_minutes": 408, "end_offset_minutes": 640},
+        {"start_offset_minutes": 768, "end_offset_minutes": 1000}
+      ]
+    },
+    "20": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Vault of Knowledge",
+      "area": "Starlight Desert",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "21": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Daylight Prairie",
+      "area": "Bird Nest",
+      "rewards": "2.5 Ascended Candles",
+      "no_shard_days": ["Tuesday", "Wednesday"],
+      "windows": [
+        {"start_offset_minutes": 128, "end_offset_minutes": 360},
+        {"start_offset_minutes": 488, "end_offset_minutes": 720},
+        {"start_offset_minutes": 848, "end_offset_minutes": 1080}
+      ]
+    },
+    "22": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Hidden Forest",
+      "area": "Boneyard",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "23": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Valley of Triumph",
+      "area": "Hermit Valley",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Wednesday", "Thursday"],
+      "windows": [
+        {"start_offset_minutes": 198, "end_offset_minutes": 430},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 918, "end_offset_minutes": 1150}
+      ]
+    },
+    "24": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Golden Wasteland",
+      "area": "Broken Temple",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "25": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Vault of Knowledge",
+      "area": "Jellyfish Cove",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Monday", "Tuesday"],
+      "windows": [
+        {"start_offset_minutes": 48, "end_offset_minutes": 280},
+        {"start_offset_minutes": 408, "end_offset_minutes": 640},
+        {"start_offset_minutes": 768, "end_offset_minutes": 1000}
+      ]
+    },
+    "26": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Daylight Prairie",
+      "area": "Prairie Village",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "27": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Hidden Forest",
+      "area": "Treehouse",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Tuesday", "Wednesday"],
+      "windows": [
+        {"start_offset_minutes": 128, "end_offset_minutes": 360},
+        {"start_offset_minutes": 488, "end_offset_minutes": 720},
+        {"start_offset_minutes": 848, "end_offset_minutes": 1080}
+      ]
+    },
+    "28": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Valley of Triumph",
+      "area": "Frozen Lake",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Saturday", "Sunday"],
+      "windows": [
+        {"start_offset_minutes": 98, "end_offset_minutes": 330},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 1018, "end_offset_minutes": 1250}
+      ]
+    },
+    "29": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Golden Wasteland",
+      "area": "Forgotten Ark",
+      "rewards": "3.5 Ascended Candles",
+      "no_shard_days": ["Wednesday", "Thursday"],
+      "windows": [
+        {"start_offset_minutes": 198, "end_offset_minutes": 430},
+        {"start_offset_minutes": 558, "end_offset_minutes": 790},
+        {"start_offset_minutes": 918, "end_offset_minutes": 1150}
+      ]
+    },
+    "30": {
+      "type": "Regular",
+      "type_ar": "العادي (الأسود)",
+      "realm": "Vault of Knowledge",
+      "area": "Starlight Desert",
+      "rewards": "200 Wax",
+      "no_shard_days": ["Sunday", "Monday"],
+      "windows": [
+        {"start_offset_minutes": 118, "end_offset_minutes": 350},
+        {"start_offset_minutes": 578, "end_offset_minutes": 810},
+        {"start_offset_minutes": 1038, "end_offset_minutes": 1270}
+      ]
+    },
+    "31": {
+      "type": "Strong",
+      "type_ar": "القوي (الأحمر)",
+      "realm": "Daylight Prairie",
+      "area": "Prairie Caves",
+      "rewards": "2 Ascended Candles",
+      "no_shard_days": ["Monday", "Tuesday"],
+      "windows": [
+        {"start_offset_minutes": 48, "end_offset_minutes": 280},
+        {"start_offset_minutes": 408, "end_offset_minutes": 640},
+        {"start_offset_minutes": 768, "end_offset_minutes": 1000}
+      ]
+    }
+  }
+}

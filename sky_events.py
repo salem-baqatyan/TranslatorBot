@@ -30,6 +30,37 @@ class SkyEvents(commands.Cog):
         self.events_checker.cancel()
 
     # ---------------------------------------------------------
+    # تسمية موجات ثوران الشظايا لغوياً
+    # ---------------------------------------------------------
+    def get_wave_label(self, idx, total_windows):
+        if idx == 1:
+            return "الموجة الأولى • First Wave"
+        elif idx == total_windows or idx == 3:
+            return "الموجة الأخيرة • Final Wave"
+        elif idx == 2:
+            return "الموجة الثانية • Second Wave"
+        else:
+            return f"الموجة {idx} • Wave {idx}"
+
+    # ---------------------------------------------------------
+    # تنسيق الأيام لغوياً باللغتين العربية والإنجليزية
+    # ---------------------------------------------------------
+    def format_days_left(self, days, is_start=False):
+        prefix_ar = "يبدأ خلال" if is_start else "متبقي"
+        prefix_en = "Starts in" if is_start else "Ends in"
+
+        if days <= 0:
+            return f"{prefix_ar} أقل من يوم • {prefix_en} less than a day"
+        elif days == 1:
+            return f"{prefix_ar} يوم واحد • {prefix_en} 1 day"
+        elif days == 2:
+            return f"{prefix_ar} يومان • {prefix_en} 2 days"
+        elif 3 <= days <= 10:
+            return f"{prefix_ar} {days} أيام • {prefix_en} {days} days"
+        else:
+            return f"{prefix_ar} {days} يوماً • {prefix_en} {days} days"
+
+    # ---------------------------------------------------------
     # حساب وقت الريسيت اليومي الأخير بتوقيت السيرفر (UTC)
     # ---------------------------------------------------------
     def get_last_daily_reset_utc(self):
@@ -106,7 +137,7 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "Alert 🔔",
+                        "🔔",
                         "سيبدأ الحدث بعد قليل! • Starting soon!",
                         discord.Color.gold(),
                     )
@@ -118,7 +149,7 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "Start 🟢",
+                        "🟢",
                         "بدأ الحدث الآن! • Started now!",
                         discord.Color.green(),
                     )
@@ -130,7 +161,7 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "End 🔴",
+                        "🔴",
                         "انتهى الحدث الآن. • Ended now.",
                         discord.Color.red(),
                     )
@@ -221,17 +252,20 @@ class SkyEvents(commands.Cog):
             return
 
         now_minute_key = now_utc.strftime("%Y%m%d%H%M")
+        windows = shard_info.get("windows", [])
+        total_windows = len(windows)
 
-        for idx, window in enumerate(shard_info.get("windows", []), start=1):
+        for idx, window in enumerate(windows, start=1):
             start_off = window["start_offset_minutes"]
             end_off = window["end_offset_minutes"]
+            wave_label = self.get_wave_label(idx, total_windows)
 
             if minutes_since_reset == start_off:
                 alert_key = f"shard_start_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
                 if alert_key not in self.sent_alerts:
                     embed = discord.Embed(
-                        title="🌋 ثوران الشظايا │ 🟢 Start",
-                        description="بدأ ثوران الشظايا الآن!",
+                        title=f"🌋 ثوران الشظايا • Shard Eruptions 【🟢】",
+                        description=f"بدأ ثوران الشظايا ({wave_label}) الآن! • Shard eruption started now!",
                         color=discord.Color.green(),
                         timestamp=now_utc
                     )
@@ -255,8 +289,8 @@ class SkyEvents(commands.Cog):
                 alert_key = f"shard_end_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
                 if alert_key not in self.sent_alerts:
                     embed = discord.Embed(
-                        title=f"🌋 ثوران الشظايا — [End 🔴]",
-                        description=f"انتهى ثوران الشظايا الآن.",
+                        title=f"🌋 ثوران الشظايا • Shard Eruptions 【🔴】",
+                        description=f"انتهى ثوران الشظايا ({wave_label}) الآن. • Shard eruption ended now.",
                         color=discord.Color.red(),
                         timestamp=now_utc
                     )
@@ -288,7 +322,7 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "Start 🟢",
+                        "🟢",
                         "بدأ الحدث الآن! • Started now!",
                         discord.Color.green(),
                     )
@@ -300,14 +334,14 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "End 🔴",
+                        "🔴",
                         "انتهى الحدث الآن. • Ended now.",
                         discord.Color.red(),
                     )
                     self.sent_alerts.add(alert_key)
 
     # ---------------------------------------------------------
-    # ملخص اليوم الجديد - يعتمد بالكامل على وقت البدء والنهاية
+    # ملخص اليوم الجديد - يعتمد بالكامل على الأيام المتبقية
     # ---------------------------------------------------------
     async def send_daily_reset_summary(self, channel, now_utc, last_reset):
         embed = discord.Embed(
@@ -367,40 +401,24 @@ class SkyEvents(commands.Cog):
             realm = event.get("realm", "غير محدد")
             area = event.get("area", "غير محدد")
 
-            # 1. الحدث لم يبدأ بعد (حساب المتبقي لبدئه)
+            # 1. الحدث لم يبدأ بعد (حساب الأيام المتبقية لبدئه)
             if now_utc < start_time:
-                time_until_start = start_time - now_utc
-                days_left = time_until_start.days
-                hours_left = int(time_until_start.seconds // 3600)
-
-                if days_left > 0:
-                    time_str = f"يبدأ خلال {days_left} يوم و {hours_left} ساعة • Starts in {days_left}d {hours_left}h"
-                elif hours_left > 0:
-                    time_str = f"يبدأ خلال {hours_left} ساعة • Starts in {hours_left}h"
-                else:
-                    time_str = "يبدأ خلال أقل من ساعة • Starts in less than an hour"
+                days_until_start = (start_time.date() - now_utc.date()).days
+                time_str = self.format_days_left(days_until_start, is_start=True)
 
                 embed.add_field(
-                    name=f"{icon} {name_ar} • {name_en} [قريباً • Soon]",
+                    name=f"{icon} {name_ar} • {name_en} 【⏳】",
                     value=f"📍 {realm} - {area}\n⏳ {time_str}",
                     inline=False,
                 )
 
-            # 2. الحدث نشط حالياً (حساب المتبقي لينتهي)
+            # 2. الحدث نشط حالياً (حساب الأيام المتبقية لينتهي)
             elif start_time <= now_utc <= end_time:
-                time_until_end = end_time - now_utc
-                days_left = time_until_end.days
-                hours_left = int(time_until_end.seconds // 3600)
-
-                if days_left > 0:
-                    time_str = f"متبقي {days_left} يوم و {hours_left} ساعة • Ends in {days_left}d {hours_left}h"
-                elif hours_left > 0:
-                    time_str = f"متبقي {hours_left} ساعة • Ends in {hours_left}h"
-                else:
-                    time_str = "ينتهي خلال أقل من ساعة • Ends in less than an hour"
+                days_until_end = (end_time.date() - now_utc.date()).days
+                time_str = self.format_days_left(days_until_end, is_start=False)
 
                 embed.add_field(
-                    name=f"{icon} {name_ar} • {name_en} [مستمر • Active]",
+                    name=f"{icon} {name_ar} • {name_en} 【🟢】",
                     value=f"📍 {realm} - {area}\n⏳ {time_str}",
                     inline=False,
                 )
@@ -417,12 +435,12 @@ class SkyEvents(commands.Cog):
         except (ValueError, TypeError):
             return None
 
-    async def send_event_embed(self, channel, event, status_title, description, color):
+    async def send_event_embed(self, channel, event, status_icon, description, color):
         name_ar = event.get("name_ar", "حدث")
         name_en = event.get("name_en", "Event")
 
         embed = discord.Embed(
-            title=f"{event.get('icon', '✨')} {name_ar} • {name_en} │ {status_title}",
+            title=f"{event.get('icon', '✨')} {name_ar} • {name_en} 【{status_icon}】",
             description=description,
             color=color,
             timestamp=datetime.now(timezone.utc),

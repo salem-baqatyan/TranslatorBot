@@ -9,10 +9,7 @@ class SkyEvents(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.json_path = "sky_events.json"
-        self.shards_path = "shards_schedule.json"
-
-        self.events_data = self.load_json(self.json_path)
-        self.shards_data = self.load_json(self.shards_path)
+        self.events_data = self.load_data()
 
         # لمنع تكرار التنبيهات في نفس الدقيقة
         self.sent_alerts = set()
@@ -20,14 +17,11 @@ class SkyEvents(commands.Cog):
         # لمنع إرسال ملخص بداية اليوم أكثر من مرة
         self.sent_daily_resets = set()
 
-        # لحفظ ID آخر رسالة تم إرسالها في قناة الثوران لتسهيل حذفها
-        self.last_shard_message_id = None
-
         self.events_checker.start()
 
-    def load_json(self, path):
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
+    def load_data(self):
+        if os.path.exists(self.json_path):
+            with open(self.json_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         return {}
 
@@ -79,22 +73,16 @@ class SkyEvents(commands.Cog):
         minutes_since_reset = int((now_utc - last_reset).total_seconds() // 60)
 
         # =====================================================
-        # 1. إرسال ملخص بداية اليوم الجديد وتحديث قناة الثوران
+        # 1. إرسال ملخص بداية اليوم الجديد (Daily Reset Announcement)
         # =====================================================
         if minutes_since_reset <= 5:
             reset_key = last_reset.strftime("%Y%m%d")
             if reset_key not in self.sent_daily_resets:
-                await self.update_shards_daily_channel(last_reset)
                 await self.send_daily_reset_summary(channel, now_utc, last_reset)
                 self.sent_daily_resets.add(reset_key)
 
         # =====================================================
-        # 2. فحص تنبيهات جولات ثوران الشظايا اللحظية
-        # =====================================================
-        await self.check_shard_alerts(channel, minutes_since_reset, now_utc, last_reset)
-
-        # =====================================================
-        # 3. الأحداث الدورية - كل ساعتين (الجدة، الروضة، السلحفاة)
+        # 2. الأحداث الدورية - كل ساعتين
         # =====================================================
         for event in self.events_data.get("interval_events", []):
             repeat_hours = event.get("repeat_interval_hours", 2)
@@ -108,47 +96,51 @@ class SkyEvents(commands.Cog):
 
             current_minute_key = now_minute.strftime("%Y%m%d%H%M")
 
+            # تنبيه الحدث
             if cycle_minute == alert_offset:
                 alert_key = f"{event['id']}_alert_{current_minute_key}"
                 if alert_key not in self.sent_alerts:
                     await self.send_event_embed(
                         channel,
                         event,
-                        "Alert 🔔",
+                        "تنبيه الحدث • Event Alert 🔔",
                         "سيبدأ الحدث بعد قليل! • Starting soon!",
                         discord.Color.gold(),
                     )
                     self.sent_alerts.add(alert_key)
 
+            # بدء الحدث
             elif cycle_minute == start_offset:
                 alert_key = f"{event['id']}_start_{current_minute_key}"
                 if alert_key not in self.sent_alerts:
                     await self.send_event_embed(
                         channel,
                         event,
-                        "Start 🟢",
+                        "بدء الحدث • Event Started 🟢",
                         "بدأ الحدث الآن! • Started now!",
                         discord.Color.green(),
                     )
                     self.sent_alerts.add(alert_key)
 
+            # انتهاء الحدث
             elif cycle_minute == (end_offset % cycle_minutes):
                 alert_key = f"{event['id']}_end_{current_minute_key}"
                 if alert_key not in self.sent_alerts:
                     await self.send_event_embed(
                         channel,
                         event,
-                        "End 🔴",
+                        "انتهاء الحدث • Event Ended 🔴",
                         "انتهى الحدث الآن. • Ended now.",
                         discord.Color.red(),
                     )
                     self.sent_alerts.add(alert_key)
 
         # =====================================================
-        # 4. الأحداث المجدولة واللحظية
+        # 3. الأحداث المجدولة واللحظية
         # =====================================================
         scheduled_events = self.events_data.get("scheduled_events", [])
         current_events = self.events_data.get("events_current", [])
+
         await self.check_scheduled_events(channel, scheduled_events + current_events, now_utc)
 
         # تنظيف ذاكرة التنبيهات
@@ -156,115 +148,6 @@ class SkyEvents(commands.Cog):
             self.sent_alerts.clear()
         if len(self.sent_daily_resets) > 100:
             self.sent_daily_resets.clear()
-
-    # ---------------------------------------------------------
-    # تحديث قناة الثوران اليومية (مسح الرسالة القديمة ولصق الجديدة)
-    # ---------------------------------------------------------
-    async def update_shards_daily_channel(self, last_reset):
-        shards_channel_id = self.shards_data.get("config", {}).get("shards_channel_id")
-        if not shards_channel_id:
-            return
-
-        shards_channel = self.bot.get_channel(shards_channel_id)
-        if not shards_channel:
-            return
-
-        # 1. مسح الرسائل القديمة في القناة
-        try:
-            await shards_channel.purge(limit=10)
-        except Exception:
-            pass
-
-        # 2. بناء بيانات اليوم
-        day_str = str(last_reset.day)
-        shard_info = self.shards_data.get("schedule", {}).get(day_str)
-
-        if not shard_info:
-            return
-
-        weekday = last_reset.strftime("%A")
-        no_shard = weekday in shard_info.get("no_shard_days", [])
-
-        if no_shard:
-            content = f"🌋 **الثوران اليومي** 🌋\n\n🗓️ **اليوم:** {day_str}\n\n❌ **لا يوجد ثوران لهذا اليوم** ({weekday})."
-        else:
-            # ترجمة الأيام المحظورة للعربية
-            days_translation = {
-                "Saturday": "السبت", "Sunday": "الأحد", "Monday": "الإثنين",
-                "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس", "Friday": "الجمعة"
-            }
-            no_days_ar = " و".join([days_translation.get(d, d) for d in shard_info.get("no_shard_days", [])])
-
-            # تجهيز نص الساعات بالسيفر للـ Local/User Times (تنسيق مواعيد الجولات)
-            times_text = ""
-            for window in shard_info.get("windows", []):
-                start_dt = last_reset + timedelta(minutes=window["start_offset_minutes"])
-                end_dt = last_reset + timedelta(minutes=window["end_offset_minutes"])
-                
-                # استخدام Discord Timestamp لعرض الوقت حسب التوقيت المحلي لجميع الأعضاء تلقائياً
-                start_ts = f"<t:{int(start_dt.timestamp())}:t>"
-                end_ts = f"<t:{int(end_dt.timestamp())}:t>"
-                times_text += f"• {start_ts} → {end_ts}\n"
-
-            content = (
-                f"🌋 **الثوران اليومي** 🌋\n\n"
-                f"🗓️ **اليوم:** {day_str}\n\n"
-                f"⚫ **النوع:** {shard_info.get('type_ar')}\n"
-                f"🌍 **العالم:** {shard_info.get('realm')}\n"
-                f"📍 **الموقع:** {shard_info.get('area')}\n"
-                f"✨ **المكافأة:** {shard_info.get('rewards')}\n"
-                f"🚫 **لا يظهر:** {no_days_ar}\n\n"
-                f"⏰ **الأوقات:**\n{times_text}"
-            )
-
-        msg = await shards_channel.send(content)
-        self.last_shard_message_id = msg.id
-
-    # ---------------------------------------------------------
-    # فحص وتنبيهات جولات ثوران الشظايا في قناة التذكيرات
-    # ---------------------------------------------------------
-    async def check_shard_alerts(self, channel, minutes_since_reset, now_utc, last_reset):
-        day_str = str(last_reset.day)
-        shard_info = self.shards_data.get("schedule", {}).get(day_str)
-
-        if not shard_info:
-            return
-
-        weekday = last_reset.strftime("%A")
-        if weekday in shard_info.get("no_shard_days", []):
-            return  # لا يوجد ثوران اليوم
-
-        now_minute_key = now_utc.strftime("%Y%m%d%H%M")
-
-        for idx, window in enumerate(shard_info.get("windows", []), start=1):
-            start_off = window["start_offset_minutes"]
-            end_off = window["end_offset_minutes"]
-
-            # تنبيه بدء الجولة
-            if minutes_since_reset == start_off:
-                alert_key = f"shard_start_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
-                if alert_key not in self.sent_alerts:
-                    embed = discord.Embed(
-                        title=f"🌋 ثوران الشظايا — [Start 🟢]",
-                        description=f"بدأ ثوران الشظايا الآن في **{shard_info.get('area')}** ({shard_info.get('realm')})!",
-                        color=discord.Color.red(),
-                        timestamp=now_utc
-                    )
-                    await channel.send(embed=embed)
-                    self.sent_alerts.add(alert_key)
-
-            # تنبيه انتهاء الجولة
-            elif minutes_since_reset == end_off:
-                alert_key = f"shard_end_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
-                if alert_key not in self.sent_alerts:
-                    embed = discord.Embed(
-                        title=f"🌋 ثوران الشظايا — [End 🔴]",
-                        description=f"انتهى ثوران الشظايا الآن.",
-                        color=discord.Color.dark_gray(),
-                        timestamp=now_utc
-                    )
-                    await channel.send(embed=embed)
-                    self.sent_alerts.add(alert_key)
 
     # ---------------------------------------------------------
     # فحص الأحداث المجدولة لحظة البدء/الانتهاء exact-minute
@@ -290,7 +173,7 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "Start 🟢",
+                        "بدء الحدث • Event Started 🟢",
                         "بدأ الحدث الآن! • Started now!",
                         discord.Color.green(),
                     )
@@ -302,7 +185,7 @@ class SkyEvents(commands.Cog):
                     await self.send_event_embed(
                         channel,
                         event,
-                        "End 🔴",
+                        "انتهاء الحدث • Event Ended 🔴",
                         "انتهى الحدث الآن. • Ended now.",
                         discord.Color.red(),
                     )
@@ -319,26 +202,7 @@ class SkyEvents(commands.Cog):
             timestamp=now_utc,
         )
 
-        # 1. إدراج رابط قناة الثوران
-        shards_channel_id = self.shards_data.get("config", {}).get("shards_channel_id")
-        shards_mention = f"<#{shards_channel_id}>" if shards_channel_id else "قناة الثوران"
-
-        day_str = str(last_reset.day)
-        shard_info = self.shards_data.get("schedule", {}).get(day_str, {})
-        weekday = last_reset.strftime("%A")
-
-        if weekday in shard_info.get("no_shard_days", []):
-            shard_status = "لا يوجد ثوران اليوم ❌"
-        else:
-            shard_status = f"يتوفر ثوران اليوم ({shard_info.get('type_ar')}) 🌋"
-
-        embed.add_field(
-            name="🌋 ثوران الشظايا • Shard Eruption",
-            value=f"{shard_status}\nلمعرفة التفاصيل الكاملة والمواعيد راجع: {shards_mention}",
-            inline=False,
-        )
-
-        # 2. تجدد تماثيل إيدن (الأحد فقط)
+        # 1. تجدد تماثيل إيدن (الأحد فقط)
         if now_utc.strftime("%A") == "Sunday":
             for rotation in self.events_data.get("weekly_rotations", []):
                 if rotation.get("id") == "eden_reset":
@@ -351,7 +215,7 @@ class SkyEvents(commands.Cog):
                         inline=False,
                     )
 
-        # 3. فحص الأرواح والفعاليات
+        # 2. فحص الأرواح والفعاليات
         all_events = self.events_data.get("scheduled_events", []) + self.events_data.get("events_current", [])
 
         for event in all_events:
@@ -370,6 +234,7 @@ class SkyEvents(commands.Cog):
             realm = event.get("realm", "غير محدد")
             area = event.get("area", "غير محدد")
 
+            # حالة الحدث
             if now_utc < start_time:
                 start_in_seconds = (start_time - now_utc).total_seconds()
                 days_to_start = int(start_in_seconds // 86400)
@@ -443,3 +308,4 @@ class SkyEvents(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(SkyEvents(bot))
+            #🌋    

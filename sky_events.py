@@ -14,13 +14,8 @@ class SkyEvents(commands.Cog):
         self.events_data = self.load_json(self.json_path)
         self.shards_data = self.load_json(self.shards_path)
 
-        # لمنع تكرار التنبيهات في نفس الدقيقة
         self.sent_alerts = set()
-
-        # لمنع إرسال ملخص بداية اليوم أكثر من مرة
         self.sent_daily_resets = set()
-
-        # لحفظ ID آخر رسالة تم إرسالها في قناة الثوران لتسهيل حذفها
         self.last_shard_message_id = None
 
         self.events_checker.start()
@@ -35,15 +30,12 @@ class SkyEvents(commands.Cog):
         self.events_checker.cancel()
 
     # ---------------------------------------------------------
-    # حساب وقت الريسيت اليومي الأخير
+    # حساب وقت الريسيت اليومي الأخير بتوقيت السيرفر (UTC)
     # ---------------------------------------------------------
     def get_last_daily_reset_utc(self):
         now_utc = datetime.now(timezone.utc)
-        reset_hour = int(
-            self.events_data.get("config", {})
-            .get("daily_reset_utc", "07:00")
-            .split(":")[0]
-        )
+        reset_time_str = self.events_data.get("config", {}).get("daily_reset_utc", "07:00")
+        reset_hour = int(reset_time_str.split(":")[0])
 
         reset_time_today = now_utc.replace(
             hour=reset_hour, minute=0, second=0, microsecond=0
@@ -61,9 +53,9 @@ class SkyEvents(commands.Cog):
     async def events_checker(self):
         await self.bot.wait_until_ready()
 
-        channel_id = self.events_data.get("config", {}).get(
-            "channel_id"
-        ) or int(os.getenv("SKY_EVENTS_CHANNEL_ID", "0"))
+        channel_id = self.events_data.get("config", {}).get("channel_id") or int(
+            os.getenv("SKY_EVENTS_CHANNEL_ID", "0")
+        )
 
         if not channel_id:
             return
@@ -145,11 +137,10 @@ class SkyEvents(commands.Cog):
                     self.sent_alerts.add(alert_key)
 
         # =====================================================
-        # 4. الأحداث المجدولة واللحظية
+        # 4. الأحداث المجدولة (المستمرة، القادمة، أو الأرواح)
         # =====================================================
-        scheduled_events = self.events_data.get("scheduled_events", [])
-        current_events = self.events_data.get("events_current", [])
-        await self.check_scheduled_events(channel, scheduled_events + current_events, now_utc)
+        all_scheduled = self.events_data.get("scheduled_events", []) + self.events_data.get("events_current", [])
+        await self.check_scheduled_events(channel, all_scheduled, now_utc)
 
         # تنظيف ذاكرة التنبيهات
         if len(self.sent_alerts) > 500:
@@ -158,7 +149,7 @@ class SkyEvents(commands.Cog):
             self.sent_daily_resets.clear()
 
     # ---------------------------------------------------------
-    # تحديث قناة الثوران اليومية (مسح الرسالة القديمة ولصق الجديدة)
+    # تحديث قناة الثوران اليومية معتمدة على يوم السيرفر
     # ---------------------------------------------------------
     async def update_shards_daily_channel(self, last_reset):
         shards_channel_id = self.shards_data.get("config", {}).get("shards_channel_id")
@@ -169,13 +160,11 @@ class SkyEvents(commands.Cog):
         if not shards_channel:
             return
 
-        # 1. مسح الرسائل القديمة في القناة
         try:
             await shards_channel.purge(limit=10)
         except Exception:
             pass
 
-        # 2. بناء بيانات اليوم
         day_str = str(last_reset.day)
         shard_info = self.shards_data.get("schedule", {}).get(day_str)
 
@@ -186,22 +175,19 @@ class SkyEvents(commands.Cog):
         no_shard = weekday in shard_info.get("no_shard_days", [])
 
         if no_shard:
-            content = f"🌋 **الثوران اليومي** 🌋\n\n🗓️ **اليوم:** {day_str}\n\n❌ **لا يوجد ثوران لهذا اليوم** ({weekday})."
+            content = f"🌋 **الثوران اليومي** 🌋\n\n🗓️ **يوم السيرفر:** {day_str}\n\n❌ **لا يوجد ثوران لهذا اليوم** ({weekday})."
         else:
-            # ترجمة الأيام المحظورة للعربية
             days_translation = {
                 "Saturday": "السبت", "Sunday": "الأحد", "Monday": "الإثنين",
                 "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس", "Friday": "الجمعة"
             }
             no_days_ar = " و".join([days_translation.get(d, d) for d in shard_info.get("no_shard_days", [])])
 
-            # تجهيز نص الساعات بالسيفر للـ Local/User Times (تنسيق مواعيد الجولات)
             times_text = ""
             for window in shard_info.get("windows", []):
                 start_dt = last_reset + timedelta(minutes=window["start_offset_minutes"])
                 end_dt = last_reset + timedelta(minutes=window["end_offset_minutes"])
                 
-                # استخدام Discord Timestamp لعرض الوقت حسب التوقيت المحلي لجميع الأعضاء تلقائياً
                 start_ts = f"<t:{int(start_dt.timestamp())}:t>"
                 end_ts = f"<t:{int(end_dt.timestamp())}:t>"
                 times_text += f"• {start_ts} → {end_ts}\n"
@@ -221,7 +207,7 @@ class SkyEvents(commands.Cog):
         self.last_shard_message_id = msg.id
 
     # ---------------------------------------------------------
-    # فحص وتنبيهات جولات ثوران الشظايا في قناة التذكيرات
+    # فحص وتنبيهات جولات ثوران الشظايا
     # ---------------------------------------------------------
     async def check_shard_alerts(self, channel, minutes_since_reset, now_utc, last_reset):
         day_str = str(last_reset.day)
@@ -232,7 +218,7 @@ class SkyEvents(commands.Cog):
 
         weekday = last_reset.strftime("%A")
         if weekday in shard_info.get("no_shard_days", []):
-            return  # لا يوجد ثوران اليوم
+            return
 
         now_minute_key = now_utc.strftime("%Y%m%d%H%M")
 
@@ -240,7 +226,6 @@ class SkyEvents(commands.Cog):
             start_off = window["start_offset_minutes"]
             end_off = window["end_offset_minutes"]
 
-            # تنبيه بدء الجولة
             if minutes_since_reset == start_off:
                 alert_key = f"shard_start_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
                 if alert_key not in self.sent_alerts:
@@ -253,7 +238,6 @@ class SkyEvents(commands.Cog):
                     await channel.send(embed=embed)
                     self.sent_alerts.add(alert_key)
 
-            # تنبيه انتهاء الجولة
             elif minutes_since_reset == end_off:
                 alert_key = f"shard_end_{last_reset.strftime('%Y%m%d')}_{idx}_{now_minute_key}"
                 if alert_key not in self.sent_alerts:
@@ -267,19 +251,20 @@ class SkyEvents(commands.Cog):
                     self.sent_alerts.add(alert_key)
 
     # ---------------------------------------------------------
-    # فحص الأحداث المجدولة لحظة البدء/الانتهاء exact-minute
+    # فحص الأحداث المجدولة بدون الحاجة لـ enabled
     # ---------------------------------------------------------
     async def check_scheduled_events(self, channel, events, now_utc):
         now_minute = now_utc.replace(second=0, microsecond=0)
 
         for event in events:
-            if not event.get("enabled", True):
-                continue
-
             start_time = self.parse_iso_time(event.get("start_time_iso"))
             end_time = self.parse_iso_time(event.get("end_time_iso"))
 
             if not start_time or not end_time:
+                continue
+
+            # تصفية الأحداث المنتهية كلياً
+            if now_utc > end_time:
                 continue
 
             current_minute_key = now_minute.strftime("%Y%m%d%H%M")
@@ -309,7 +294,7 @@ class SkyEvents(commands.Cog):
                     self.sent_alerts.add(alert_key)
 
     # ---------------------------------------------------------
-    # إرسال ملخص بداية اليوم الجديد المدمج
+    # ملخص اليوم الجديد - يعتمد بالكامل على وقت البدء والنهاية
     # ---------------------------------------------------------
     async def send_daily_reset_summary(self, channel, now_utc, last_reset):
         embed = discord.Embed(
@@ -319,7 +304,6 @@ class SkyEvents(commands.Cog):
             timestamp=now_utc,
         )
 
-        # 1. إدراج رابط قناة الثوران
         shards_channel_id = self.shards_data.get("config", {}).get("shards_channel_id")
         shards_mention = f"<#{shards_channel_id}>" if shards_channel_id else "قناة الثوران"
 
@@ -338,8 +322,7 @@ class SkyEvents(commands.Cog):
             inline=False,
         )
 
-        # 2. تجدد تماثيل إيدن (الأحد فقط)
-        if now_utc.strftime("%A") == "Sunday":
+        if last_reset.strftime("%A") == "Sunday":
             for rotation in self.events_data.get("weekly_rotations", []):
                 if rotation.get("id") == "eden_reset":
                     name_ar = rotation.get("name_ar", "تجدد تماثيل إيدن")
@@ -351,17 +334,18 @@ class SkyEvents(commands.Cog):
                         inline=False,
                     )
 
-        # 3. فحص الأرواح والفعاليات
+        # دمج كل الأحداث في قائمة واحدة للتقييم
         all_events = self.events_data.get("scheduled_events", []) + self.events_data.get("events_current", [])
 
         for event in all_events:
-            if not event.get("enabled", True):
-                continue
-
             start_time = self.parse_iso_time(event.get("start_time_iso"))
             end_time = self.parse_iso_time(event.get("end_time_iso"))
 
             if not start_time or not end_time:
+                continue
+
+            # التجاهل التلقائي للأحداث المنتهية
+            if now_utc > end_time:
                 continue
 
             icon = event.get("icon", "✨")
@@ -370,38 +354,46 @@ class SkyEvents(commands.Cog):
             realm = event.get("realm", "غير محدد")
             area = event.get("area", "غير محدد")
 
+            # 1. الحدث لم يبدأ بعد (حساب المتبقي لبدئه)
             if now_utc < start_time:
-                start_in_seconds = (start_time - now_utc).total_seconds()
-                days_to_start = int(start_in_seconds // 86400)
-                time_str = f"يبدأ خلال {days_to_start} أيام • Starts in {days_to_start} days" if days_to_start > 0 else "يبدأ اليوم • Starts today"
+                time_until_start = start_time - now_utc
+                days_left = time_until_start.days
+                hours_left = int(time_until_start.seconds // 3600)
+
+                if days_left > 0:
+                    time_str = f"يبدأ خلال {days_left} يوم و {hours_left} ساعة • Starts in {days_left}d {hours_left}h"
+                elif hours_left > 0:
+                    time_str = f"يبدأ خلال {hours_left} ساعة • Starts in {hours_left}h"
+                else:
+                    time_str = "يبدأ خلال أقل من ساعة • Starts in less than an hour"
+
                 embed.add_field(
                     name=f"{icon} {name_ar} • {name_en} [قريباً • Soon]",
                     value=f"📍 {realm} - {area}\n⏳ {time_str}",
                     inline=False,
                 )
 
-            elif start_time <= now_utc < end_time:
-                remaining_seconds = (end_time - now_utc).total_seconds()
-                remaining_days = int(remaining_seconds // 86400)
+            # 2. الحدث نشط حالياً (حساب المتبقي لينتهي)
+            elif start_time <= now_utc <= end_time:
+                time_until_end = end_time - now_utc
+                days_left = time_until_end.days
+                hours_left = int(time_until_end.seconds // 3600)
 
-                if remaining_days <= 0:
-                    days_text = "ينتهي اليوم • Ends today"
-                elif remaining_days == 1:
-                    days_text = "متبقي يوم واحد • 1 day left"
+                if days_left > 0:
+                    time_str = f"متبقي {days_left} يوم و {hours_left} ساعة • Ends in {days_left}d {hours_left}h"
+                elif hours_left > 0:
+                    time_str = f"متبقي {hours_left} ساعة • Ends in {hours_left}h"
                 else:
-                    days_text = f"متبقي {remaining_days} أيام • {remaining_days} days left"
+                    time_str = "ينتهي خلال أقل من ساعة • Ends in less than an hour"
 
                 embed.add_field(
                     name=f"{icon} {name_ar} • {name_en} [مستمر • Active]",
-                    value=f"📍 {realm} - {area}\n⏳ {days_text}",
+                    value=f"📍 {realm} - {area}\n⏳ {time_str}",
                     inline=False,
                 )
 
         await channel.send(embed=embed)
 
-    # ---------------------------------------------------------
-    # تحويل ISO إلى datetime
-    # ---------------------------------------------------------
     def parse_iso_time(self, value):
         if not value:
             return None
@@ -412,9 +404,6 @@ class SkyEvents(commands.Cog):
         except (ValueError, TypeError):
             return None
 
-    # ---------------------------------------------------------
-    # بناء وإرسال Embed التنبيهات الدورية
-    # ---------------------------------------------------------
     async def send_event_embed(self, channel, event, status_title, description, color):
         name_ar = event.get("name_ar", "حدث")
         name_en = event.get("name_en", "Event")

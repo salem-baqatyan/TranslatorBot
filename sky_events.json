@@ -1,6 +1,5 @@
 {
   "config": {
-    "channel_id": 1547656062360883210,
     "daily_reset_utc": "07:00"
   },
   "interval_events": [

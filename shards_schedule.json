@@ -1,7 +1,4 @@
 {
-  "config": {
-    "shards_channel_id": 1534207219493765273
-  },
   "schedule": {
     "1": {
       "type": "Strong",

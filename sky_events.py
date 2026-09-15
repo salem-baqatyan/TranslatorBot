@@ -11,6 +11,11 @@ class SkyEvents(commands.Cog):
         self.json_path = "sky_events.json"
         self.shards_path = "shards_schedule.json"
 
+        # معرفات القنوات المحددة
+        self.interval_channel_id = 1547656062360883210  # قناة الأحداث الدورية
+        self.summary_channel_id = 1549459937715822672   # قناة الخلاصة اليومية
+        self.shards_channel_id = 1534207219493765273    # قناة ثوران الشظايا
+
         self.events_data = self.load_json(self.json_path)
         self.shards_data = self.load_json(self.shards_path)
 
@@ -84,16 +89,10 @@ class SkyEvents(commands.Cog):
     async def events_checker(self):
         await self.bot.wait_until_ready()
 
-        channel_id = self.events_data.get("config", {}).get("channel_id") or int(
-            os.getenv("SKY_EVENTS_CHANNEL_ID", "0")
-        )
-
-        if not channel_id:
-            return
-
-        channel = self.bot.get_channel(channel_id)
-        if not channel:
-            return
+        # جلب القنوات الثلاث
+        interval_channel = self.bot.get_channel(self.interval_channel_id)
+        summary_channel = self.bot.get_channel(self.summary_channel_id)
+        shards_channel = self.bot.get_channel(self.shards_channel_id)
 
         now_utc = datetime.now(timezone.utc)
         now_minute = now_utc.replace(second=0, microsecond=0)
@@ -102,76 +101,81 @@ class SkyEvents(commands.Cog):
         minutes_since_reset = int((now_utc - last_reset).total_seconds() // 60)
 
         # =====================================================
-        # 1. إرسال ملخص بداية اليوم الجديد وتحديث قناة الثوران
+        # 1. إرسال ملخص بداية اليوم الجديد (قناة الخلاصة وقناة الشظايا)
         # =====================================================
         if minutes_since_reset <= 5:
             reset_key = last_reset.strftime("%Y%m%d")
             if reset_key not in self.sent_daily_resets:
-                await self.update_shards_daily_channel(last_reset)
-                await self.send_daily_reset_summary(channel, now_utc, last_reset)
+                if shards_channel:
+                    await self.update_shards_daily_channel(shards_channel, last_reset)
+                if summary_channel:
+                    await self.send_daily_reset_summary(summary_channel, now_utc, last_reset)
                 self.sent_daily_resets.add(reset_key)
 
         # =====================================================
-        # 2. فحص تنبيهات جولات ثوران الشظايا اللحظية
+        # 2. فحص تنبيهات جولات ثوران الشظايا اللحظية (قناة الشظايا)
         # =====================================================
-        await self.check_shard_alerts(channel, minutes_since_reset, now_utc, last_reset)
-
-        # =====================================================
-        # 3. الأحداث الدورية - كل ساعتين (الجدة، الروضة، السلحفاة)
-        # =====================================================
-        for event in self.events_data.get("interval_events", []):
-            repeat_hours = event.get("repeat_interval_hours", 2)
-            cycle_minutes = repeat_hours * 60
-
-            cycle_minute = minutes_since_reset % cycle_minutes
-
-            alert_offset = event["alert_offset_minutes"]
-            start_offset = event["start_offset_minutes"]
-            end_offset = event["end_offset_minutes"]
-
-            current_minute_key = now_minute.strftime("%Y%m%d%H%M")
-
-            if cycle_minute == alert_offset:
-                alert_key = f"{event['id']}_alert_{current_minute_key}"
-                if alert_key not in self.sent_alerts:
-                    await self.send_event_embed(
-                        channel,
-                        event,
-                        "🔔",
-                        "سيبدأ الحدث بعد قليل! • Starting soon!",
-                        discord.Color.gold(),
-                    )
-                    self.sent_alerts.add(alert_key)
-
-            elif cycle_minute == start_offset:
-                alert_key = f"{event['id']}_start_{current_minute_key}"
-                if alert_key not in self.sent_alerts:
-                    await self.send_event_embed(
-                        channel,
-                        event,
-                        "🟢",
-                        "بدأ الحدث الآن! • Started now!",
-                        discord.Color.green(),
-                    )
-                    self.sent_alerts.add(alert_key)
-
-            elif cycle_minute == (end_offset % cycle_minutes):
-                alert_key = f"{event['id']}_end_{current_minute_key}"
-                if alert_key not in self.sent_alerts:
-                    await self.send_event_embed(
-                        channel,
-                        event,
-                        "🔴",
-                        "انتهى الحدث الآن. • Ended now.",
-                        discord.Color.red(),
-                    )
-                    self.sent_alerts.add(alert_key)
+        if shards_channel:
+            await self.check_shard_alerts(shards_channel, minutes_since_reset, now_utc, last_reset)
 
         # =====================================================
-        # 4. الأحداث المجدولة (المستمرة، القادمة، أو الأرواح)
+        # 3. الأحداث الدورية (قناة الأحداث الدورية)
         # =====================================================
-        all_scheduled = self.events_data.get("scheduled_events", [])
-        await self.check_scheduled_events(channel, all_scheduled, now_utc)
+        if interval_channel:
+            for event in self.events_data.get("interval_events", []):
+                repeat_hours = event.get("repeat_interval_hours", 2)
+                cycle_minutes = repeat_hours * 60
+
+                cycle_minute = minutes_since_reset % cycle_minutes
+
+                alert_offset = event["alert_offset_minutes"]
+                start_offset = event["start_offset_minutes"]
+                end_offset = event["end_offset_minutes"]
+
+                current_minute_key = now_minute.strftime("%Y%m%d%H%M")
+
+                if cycle_minute == alert_offset:
+                    alert_key = f"{event['id']}_alert_{current_minute_key}"
+                    if alert_key not in self.sent_alerts:
+                        await self.send_event_embed(
+                            interval_channel,
+                            event,
+                            "🔔",
+                            "سيبدأ الحدث بعد قليل! • Starting soon!",
+                            discord.Color.gold(),
+                        )
+                        self.sent_alerts.add(alert_key)
+
+                elif cycle_minute == start_offset:
+                    alert_key = f"{event['id']}_start_{current_minute_key}"
+                    if alert_key not in self.sent_alerts:
+                        await self.send_event_embed(
+                            interval_channel,
+                            event,
+                            "🟢",
+                            "بدأ الحدث الآن! • Started now!",
+                            discord.Color.green(),
+                        )
+                        self.sent_alerts.add(alert_key)
+
+                elif cycle_minute == (end_offset % cycle_minutes):
+                    alert_key = f"{event['id']}_end_{current_minute_key}"
+                    if alert_key not in self.sent_alerts:
+                        await self.send_event_embed(
+                            interval_channel,
+                            event,
+                            "🔴",
+                            "انتهى الحدث الآن. • Ended now.",
+                            discord.Color.red(),
+                        )
+                        self.sent_alerts.add(alert_key)
+
+        # =====================================================
+        # 4. الأحداث المجدولة (قناة الخلاصة)
+        # =====================================================
+        if summary_channel:
+            all_scheduled = self.events_data.get("scheduled_events", [])
+            await self.check_scheduled_events(summary_channel, all_scheduled, now_utc)
 
         # تنظيف ذاكرة التنبيهات
         if len(self.sent_alerts) > 500:
@@ -182,17 +186,9 @@ class SkyEvents(commands.Cog):
     # ---------------------------------------------------------
     # تحديث قناة الثوران اليومية معتمدة على يوم السيرفر
     # ---------------------------------------------------------
-    async def update_shards_daily_channel(self, last_reset):
-        shards_channel_id = self.shards_data.get("config", {}).get("shards_channel_id")
-        if not shards_channel_id:
-            return
-
-        shards_channel = self.bot.get_channel(shards_channel_id)
-        if not shards_channel:
-            return
-
+    async def update_shards_daily_channel(self, shards_channel, last_reset):
         try:
-            await shards_channel.purge(limit=10)
+            await shards_channel.purge(limit=100)
         except Exception:
             pass
 
@@ -351,8 +347,7 @@ class SkyEvents(commands.Cog):
             timestamp=now_utc,
         )
 
-        shards_channel_id = self.shards_data.get("config", {}).get("shards_channel_id")
-        shards_mention = f"<#{shards_channel_id}>" if shards_channel_id else "قناة الثوران"
+        shards_mention = f"<#{self.shards_channel_id}>"
 
         day_str = str(last_reset.day)
         shard_info = self.shards_data.get("schedule", {}).get(day_str, {})

@@ -170,7 +170,7 @@ class SkyEvents(commands.Cog):
         # =====================================================
         # 4. الأحداث المجدولة (المستمرة، القادمة، أو الأرواح)
         # =====================================================
-        all_scheduled = self.events_data.get("scheduled_events", []) + self.events_data.get("events_current", [])
+        all_scheduled = self.events_data.get("scheduled_events", [])
         await self.check_scheduled_events(channel, all_scheduled, now_utc)
 
         # تنظيف ذاكرة التنبيهات
@@ -382,7 +382,7 @@ class SkyEvents(commands.Cog):
                     )
 
         # دمج كل الأحداث في قائمة واحدة للتقييم
-        all_events = self.events_data.get("scheduled_events", []) + self.events_data.get("events_current", [])
+        all_events = self.events_data.get("scheduled_events", [])
 
         for event in all_events:
             start_time = self.parse_iso_time(event.get("start_time_iso"))

@@ -52,20 +52,10 @@
       "day_of_week": "Sunday"
     }
   ],
+
   "scheduled_events": [
     {
-      "id": "ts_current",
-      "type": "Travelling Spirit",
-      "name_ar": "الجد الحكيم",
-      "name_en": "Wise Grandparent",
-      "realm": "Vault of Knowledge",
-      "area": "Vault Archive",
-      "icon": "🧞‍♂️",
-      "start_time_iso": "2026-09-10T07:00:00Z",
-      "end_time_iso": "2026-09-14T06:59:59Z"
-    },
-    {
-      "id": "events_current",
+      "id": "upcoming_event_current",
       "type": "Events",
       "name_ar": "أيام ضوء القمر",
       "name_en": "Days of Moonlight",
@@ -74,6 +64,52 @@
       "icon": "🌙",
       "start_time_iso": "2026-09-19T07:00:00Z",
       "end_time_iso": "2026-10-10T06:59:59Z"
+    },
+    {
+      "id": "on_going",
+      "type": "Special",
+      "name_ar": "مضاعفة الشموع العادية والموسمية",
+      "name_en": "Double Seasonal & Treasure Candles",
+      "realm": "All Realms",
+      "area": "Daily Candle Cakes",
+      "icon": "🕯️",
+      "start_time_iso": "2026-09-11T07:00:00Z",
+      "end_time_iso": "2026-09-24T06:59:59Z"
+    },
+    {
+      "id": "season_current",
+      "type": "Season",
+      "name_ar": "عزيزي فان جوخ",
+      "name_en": "Dear Van Gogh",
+      "realm": "Vault of Knowledge",
+      "area": "Starry Gallery",
+      "icon": "🎨",
+      "start_time_iso": "2026-7-01T07:00:00Z",
+      "end_time_iso": "2026-10-01T06:59:59Z"
+    },
+    {
+      "id": "traveling_spirit_current",
+      "type": "Travelling Spirit",
+      "name_ar": "لم يُعلن بعد",
+      "name_en": "To Be Announced",
+      "realm": "غير محدد",
+      "area": "غير محدد",
+      "icon": "❓",
+      "start_time_iso": "2026-09-24T07:00:00Z",
+      "end_time_iso": "2026-09-27T06:59:59Z"
+    }
+  ],
+    "upcoming_events": [
+  {
+      "id": "scheduled_events_id",
+      "type": "type_of_event",
+      "name_ar": "لم يُعلن بعد",
+      "name_en": "To Be Announced",
+      "realm": "غير محدد",
+      "area": "غير محدد",
+      "icon": "❓",
+      "start_time_iso": "2026-09-24T07:00:00Z",
+      "end_time_iso": "2026-09-27T06:59:59Z"
     }
   ]
 }

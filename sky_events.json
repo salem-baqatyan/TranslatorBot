@@ -67,8 +67,8 @@
     {
       "id": "on_going",
       "type": "Special",
-      "name_ar": "مضاعفة الشموع العادية والموسمية",
-      "name_en": "Double Seasonal & Treasure Candles",
+      "name_ar": "مضاعفة الشموع",
+      "name_en": "Double Candles",
       "realm": "All Realms",
       "area": "Daily Candle Cakes",
       "icon": "🕯️",
@@ -83,7 +83,7 @@
       "realm": "Vault of Knowledge",
       "area": "Starry Gallery",
       "icon": "🎨",
-      "start_time_iso": "2026-7-01T07:00:00Z",
+      "start_time_iso": "2026-07-01T07:00:00Z",
       "end_time_iso": "2026-10-01T06:59:59Z"
     },
     {
@@ -109,6 +109,17 @@
       "icon": "❓",
       "start_time_iso": "2026-09-24T07:00:00Z",
       "end_time_iso": "2026-09-27T06:59:59Z"
+    },
+    {
+      "id": "traveling_spirit_current",
+      "type": "Travelling Spirit",
+      "name_ar": "الجد الحكيم",
+      "name_en": "Wise Grandparent",
+      "realm": "Vault of Knowledge",
+      "area": "Vault Archive",
+      "icon": "🧞‍♂️",
+      "start_time_iso": "2026-09-10T07:00:00Z",
+      "end_time_iso": "2026-09-14T06:59:59Z"
     }
   ]
 }

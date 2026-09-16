@@ -353,30 +353,45 @@ class SkyEvents(commands.Cog):
         shard_info = self.shards_data.get("schedule", {}).get(day_str, {})
         weekday = last_reset.strftime("%A")
 
-        if weekday in shard_info.get("no_shard_days", []):
-            shard_status = "لا يوجد ثوران اليوم ❌"
-        else:
-            shard_status = f"يتوفر ثوران اليوم ({shard_info.get('type_ar')}) 🌋"
+        # إضافة ثوران الشظايا فقط في حالة وجود ثوران اليوم
+        if weekday not in shard_info.get("no_shard_days", []):
+            shard_type = shard_info.get("type", "").lower()
+            if shard_type == "strong":
+                reward_text = "المكافأة شموع إيدن"
+            else:
+                reward_text = "المكافأة شموع عادية"
 
-        embed.add_field(
-            name="🌋 ثوران الشظايا • Shard Eruption",
-            value=f"{shard_status}\nلمعرفة التفاصيل الكاملة والمواعيد راجع: {shards_mention}",
-            inline=False,
-        )
+            embed.add_field(
+                name="\u200b",
+                value="\u200b",
+                inline=False
+            )
+            embed.add_field(
+                name="🌋 ثوران الشظايا • Shard Eruption",
+                value=f"ثوران اليوم ({reward_text}) 🌋\n{shards_mention}",
+                inline=False,
+            )
 
+        # إضافة ريسيت إيدن يوم الأحد
         if last_reset.strftime("%A") == "Sunday":
             for rotation in self.events_data.get("weekly_rotations", []):
                 if rotation.get("id") == "eden_reset":
                     name_ar = rotation.get("name_ar", "تجدد تماثيل إيدن")
                     name_en = rotation.get("name_en", "Eden Reset")
                     icon = rotation.get("icon", "💎")
+
+                    embed.add_field(
+                        name="\u200b",
+                        value="\u200b",
+                        inline=False
+                    )
                     embed.add_field(
                         name=f"{icon} {name_ar} • {name_en}",
                         value="تم إعادة ضبط تماثيل إيدن للأسبوع الجديد! 🔄\nEden statues have been reset for the week!",
                         inline=False,
                     )
 
-        # دمج كل الأحداث في قائمة واحدة للتقييم
+        # الأحداث المجدولة
         all_events = self.events_data.get("scheduled_events", [])
 
         for event in all_events:
@@ -396,7 +411,14 @@ class SkyEvents(commands.Cog):
             realm = event.get("realm", "غير محدد")
             area = event.get("area", "غير محدد")
 
-            # 1. الحدث لم يبدأ بعد (حساب الأيام المتبقية لبدئه)
+            # مسافة فاصلة بين الأحداث
+            embed.add_field(
+                name="\u200b",
+                value="\u200b",
+                inline=False
+            )
+
+            # 1. الحدث لم يبدأ بعد
             if now_utc < start_time:
                 days_until_start = (start_time.date() - now_utc.date()).days
                 time_str = self.format_days_left(days_until_start, is_start=True)
@@ -407,7 +429,7 @@ class SkyEvents(commands.Cog):
                     inline=False,
                 )
 
-            # 2. الحدث نشط حالياً (حساب الأيام المتبقية لينتهي)
+            # 2. الحدث نشط حالياً
             elif start_time <= now_utc <= end_time:
                 days_until_end = (end_time.date() - now_utc.date()).days
                 time_str = self.format_days_left(days_until_end, is_start=False)

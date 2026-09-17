@@ -340,6 +340,11 @@ class SkyEvents(commands.Cog):
     # ملخص اليوم الجديد - يعتمد بالكامل على الأيام المتبقية
     # ---------------------------------------------------------
     async def send_daily_reset_summary(self, channel, now_utc, last_reset):
+        # تنظيف قناة الخلاصة قبل إرسال الملخص الجديد
+        try:
+            await channel.purge(limit=100)
+        except Exception:
+            pass
         embed = discord.Embed(
             title="🌅 يوم جديد في سكاي • New Sky Day",
             description="تم تجديد المهام اليومية والشموع! • Daily quests and candles reset!",

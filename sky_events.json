@@ -65,6 +65,17 @@
       "end_time_iso": "2026-10-10T06:59:59Z"
     },
     {
+      "id": "traveling_spirit_current",
+      "type": "Travelling Spirit",
+      "name_ar": "رسّام الجداريات",
+      "name_en": "Nodding Muralist",
+      "realm": "Vault of Knowledge",
+      "area": "Forgotten Ark",
+      "icon": "🧞‍♂️",
+      "start_time_iso": "2026-09-24T07:00:00Z",
+      "end_time_iso": "2026-09-27T06:59:59Z"
+    },
+    {
       "id": "on_going",
       "type": "Special",
       "name_ar": "مضاعفة الشموع",
@@ -85,17 +96,6 @@
       "icon": "🎨",
       "start_time_iso": "2026-07-01T07:00:00Z",
       "end_time_iso": "2026-10-01T06:59:59Z"
-    },
-    {
-      "id": "traveling_spirit_current",
-      "type": "Travelling Spirit",
-      "name_ar": "رسّام الجداريات",
-      "name_en": "Nodding Muralist",
-      "realm": "Vault of Knowledge",
-      "area": "Forgotten Ark",
-      "icon": "🧞‍♂️",
-      "start_time_iso": "2026-09-24T07:00:00Z",
-      "end_time_iso": "2026-09-27T06:59:59Z"
     }
   ],
     "upcoming_events": [

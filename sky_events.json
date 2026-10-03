@@ -67,35 +67,35 @@
     {
       "id": "traveling_spirit_current",
       "type": "Travelling Spirit",
-      "name_ar": "رسّام الجداريات",
-      "name_en": "Nodding Muralist",
-      "realm": "Vault of Knowledge",
-      "area": "Forgotten Ark",
+      "name_ar": "البناء الموهوب",
+      "name_en": "Talented Builder",
+      "realm": "Hidden Forest",
+      "area": "Wind Path",
       "icon": "🧞‍♂️",
-      "start_time_iso": "2026-09-24T07:00:00Z",
-      "end_time_iso": "2026-09-27T06:59:59Z"
+      "start_time_iso": "2026-10-08T07:00:00Z",
+      "end_time_iso": "2026-10-11T06:59:59Z"
     },
     {
       "id": "on_going",
       "type": "Special",
-      "name_ar": "مضاعفة الشموع",
-      "name_en": "Double Candles",
+      "name_ar": "حدث الإشعاع (صبغات حمراء وسوداء)",
+      "name_en": "Radiance Event (Red and Black Dyes)",
       "realm": "All Realms",
-      "area": "Daily Candle Cakes",
-      "icon": "🕯️",
-      "start_time_iso": "2026-09-11T07:00:00Z",
-      "end_time_iso": "2026-09-24T06:59:59Z"
-    },
+      "area": "All Area",
+      "icon": "🖌️",
+      "start_time_iso": "2026-10-02T07:00:00Z",
+      "end_time_iso": "2026-10-15T06:59:59Z"
+    },    
     {
       "id": "season_current",
       "type": "Season",
-      "name_ar": "عزيزي فان جوخ",
-      "name_en": "Dear Van Gogh",
+      "name_ar": "موسم اللؤلؤة",
+      "name_en": "Season of Pearl",
       "realm": "Vault of Knowledge",
       "area": "Starry Gallery",
-      "icon": "🎨",
-      "start_time_iso": "2026-07-01T07:00:00Z",
-      "end_time_iso": "2026-10-02T06:59:59Z"
+      "icon": "🦪",
+      "start_time_iso": "2026-10-16T07:00:00Z",
+      "end_time_iso": "2026-12-31T06:59:59Z"
     }
   ],
     "upcoming_events": [

@@ -345,6 +345,7 @@ class SkyEvents(commands.Cog):
             await channel.purge(limit=100)
         except Exception:
             pass
+
         embed = discord.Embed(
             title="🌅 يوم جديد في سكاي • New Sky Day",
             description="تم تجديد المهام اليومية والشموع! • Daily quests and candles reset!",
@@ -358,27 +359,8 @@ class SkyEvents(commands.Cog):
         shard_info = self.shards_data.get("schedule", {}).get(day_str, {})
         weekday = last_reset.strftime("%A")
 
-        # إضافة ثوران الشظايا فقط في حالة وجود ثوران اليوم
-        if weekday not in shard_info.get("no_shard_days", []):
-            shard_type = shard_info.get("type", "").lower()
-            if shard_type == "strong":
-                reward_text = "المكافأة شموع إيدن"
-            else:
-                reward_text = "المكافأة شموع عادية"
-
-            embed.add_field(
-                name="\u200b",
-                value="\u200b",
-                inline=False
-            )
-            embed.add_field(
-                name="🌋 ثوران الشظايا • Shard Eruption",
-                value=f"ثوران اليوم ({reward_text}) 🌋\n{shards_mention}",
-                inline=False,
-            )
-
-        # إضافة ريسيت إيدن يوم الأحد
-        if last_reset.strftime("%A") == "Sunday":
+        # 1. تجدد إيدن يوم الأحد
+        if weekday == "Sunday":
             for rotation in self.events_data.get("weekly_rotations", []):
                 if rotation.get("id") == "eden_reset":
                     name_ar = rotation.get("name_ar", "تجدد تماثيل إيدن")
@@ -396,56 +378,109 @@ class SkyEvents(commands.Cog):
                         inline=False,
                     )
 
-        # الأحداث المجدولة
+        # 2. ثوران الشظايا
+        if weekday not in shard_info.get("no_shard_days", []):
+            shard_type = shard_info.get("type", "").lower()
+
+            if shard_type == "strong":
+                reward_text = "المكافأة شموع إيدن"
+            else:
+                reward_text = "المكافأة شموع عادية"
+
+            embed.add_field(
+                name="\u200b",
+                value="\u200b",
+                inline=False
+            )
+            embed.add_field(
+                name="🌋 ثوران الشظايا • Shard Eruption",
+                value=f"ثوران اليوم ({reward_text}) 🌋\n{shards_mention}",
+                inline=False,
+            )
+
+        # ترتيب الأحداث المطلوب، من الأعلى إلى الأسفل
+        event_order = [
+            "traveling_spirit_current",
+            "upcoming_event_current",
+            "on_going",
+            "season_current",
+        ]
+
         all_events = self.events_data.get("scheduled_events", [])
 
-        for event in all_events:
-            start_time = self.parse_iso_time(event.get("start_time_iso"))
-            end_time = self.parse_iso_time(event.get("end_time_iso"))
+        # فصل الأحداث الحالية عن القادمة، مع الالتزام بالترتيب المحدد
+        current_events = []
+        upcoming_events = []
 
-            if not start_time or not end_time:
-                continue
+        for event_id in event_order:
+            for event in all_events:
+                if event.get("id") != event_id:
+                    continue
 
-            # التجاهل التلقائي للأحداث المنتهية
-            if now_utc > end_time:
-                continue
+                start_time = self.parse_iso_time(event.get("start_time_iso"))
+                end_time = self.parse_iso_time(event.get("end_time_iso"))
 
+                if not start_time or not end_time:
+                    continue
+
+                # تجاهل الأحداث المنتهية كلياً
+                if now_utc > end_time:
+                    continue
+
+                if start_time <= now_utc <= end_time:
+                    current_events.append((event, start_time, end_time))
+                elif now_utc < start_time:
+                    upcoming_events.append((event, start_time, end_time))
+
+                break
+
+        # 3. الأحداث المفعلة والحالية
+        for event, start_time, end_time in current_events:
             icon = event.get("icon", "✨")
             name_ar = event.get("name_ar", "حدث")
             name_en = event.get("name_en", "Event")
             realm = event.get("realm", "غير محدد")
             area = event.get("area", "غير محدد")
 
-            # مسافة فاصلة بين الأحداث
+            days_until_end = (end_time.date() - now_utc.date()).days
+            time_str = self.format_days_left(days_until_end, is_start=False)
+
             embed.add_field(
                 name="\u200b",
                 value="\u200b",
                 inline=False
             )
+            embed.add_field(
+                name=f"{icon} {name_ar} • {name_en} 【🟢】",
+                value=f"📍 {realm} - {area}\n⏳ {time_str}",
+                inline=False,
+            )
 
-            # 1. الحدث لم يبدأ بعد
-            if now_utc < start_time:
-                days_until_start = (start_time.date() - now_utc.date()).days
-                time_str = self.format_days_left(days_until_start, is_start=True)
+        # 4. الأحداث القادمة
+        for event, start_time, end_time in upcoming_events:
+            icon = event.get("icon", "✨")
+            name_ar = event.get("name_ar", "حدث")
+            name_en = event.get("name_en", "Event")
+            realm = event.get("realm", "غير محدد")
+            area = event.get("area", "غير محدد")
 
-                embed.add_field(
-                    name=f"{icon} {name_ar} • {name_en} 【⏳】",
-                    value=f"📍 {realm} - {area}\n⏳ {time_str}",
-                    inline=False,
-                )
+            days_until_start = (start_time.date() - now_utc.date()).days
+            time_str = self.format_days_left(days_until_start, is_start=True)
 
-            # 2. الحدث نشط حالياً
-            elif start_time <= now_utc <= end_time:
-                days_until_end = (end_time.date() - now_utc.date()).days
-                time_str = self.format_days_left(days_until_end, is_start=False)
-
-                embed.add_field(
-                    name=f"{icon} {name_ar} • {name_en} 【🟢】",
-                    value=f"📍 {realm} - {area}\n⏳ {time_str}",
-                    inline=False,
-                )
+            embed.add_field(
+                name="\u200b",
+                value="\u200b",
+                inline=False
+            )
+            embed.add_field(
+                name=f"{icon} {name_ar} • {name_en} 【⏳】",
+                value=f"📍 {realm} - {area}\n⏳ {time_str}",
+                inline=False,
+            )
 
         await channel.send(embed=embed)
+
+
 
     def parse_iso_time(self, value):
         if not value:

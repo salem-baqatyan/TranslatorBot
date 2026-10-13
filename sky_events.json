@@ -54,26 +54,26 @@
 
   "scheduled_events": [
     {
-      "id": "upcoming_event_current",
-      "type": "Events",
-      "name_ar": "أيام ضوء القمر",
-      "name_en": "Days of Moonlight",
-      "realm": "Vault of Knowledge",
-      "area": "Crescent Oasis",
-      "icon": "🌙",
-      "start_time_iso": "2026-09-19T07:00:00Z",
-      "end_time_iso": "2026-10-10T06:59:59Z"
-    },
-    {
       "id": "traveling_spirit_current",
       "type": "Travelling Spirit",
-      "name_ar": "البناء الموهوب",
-      "name_en": "Talented Builder",
-      "realm": "Hidden Forest",
-      "area": "Wind Path",
-      "icon": "🧞‍♂️",
-      "start_time_iso": "2026-10-08T07:00:00Z",
-      "end_time_iso": "2026-10-11T06:59:59Z"
+      "name_ar": "لم يُعلن بعد",
+      "name_en": "To Be Announced",
+      "realm": "غير محدد",
+      "area": "غير محدد",
+      "icon": "❓",
+      "start_time_iso": "2026-10-22T07:00:00Z",
+      "end_time_iso": "2026-10-25T06:59:59Z"
+    },
+    {
+      "id": "upcoming_event_current",
+      "type": "Events",
+      "name_ar": "أيام الشغب",
+      "name_en": "Days of Mischief",
+      "realm": "Vault of Knowledge",
+      "area": "The Cackling Crab",
+      "icon": "🎃",
+      "start_time_iso": "2026-10-23T07:00:00Z",
+      "end_time_iso": "2026-11-12T06:59:59Z"
     },
     {
       "id": "on_going",
@@ -98,7 +98,7 @@
       "end_time_iso": "2026-12-31T06:59:59Z"
     }
   ],
-    "upcoming_events": [
+    "test_events": [
   {
       "id": "scheduled_events_id",
       "type": "type_of_event",

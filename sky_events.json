@@ -51,7 +51,6 @@
       "day_of_week": "Sunday"
     }
   ],
-
   "scheduled_events": [
     {
       "id": "traveling_spirit_current",
@@ -85,7 +84,7 @@
       "icon": "🖌️",
       "start_time_iso": "2026-10-02T07:00:00Z",
       "end_time_iso": "2026-10-15T06:59:59Z"
-    },    
+    },
     {
       "id": "season_current",
       "type": "Season",
@@ -98,8 +97,8 @@
       "end_time_iso": "2026-12-31T06:59:59Z"
     }
   ],
-    "test_events": [
-  {
+  "test_events": [
+    {
       "id": "scheduled_events_id",
       "type": "type_of_event",
       "name_ar": "لم يُعلن بعد",

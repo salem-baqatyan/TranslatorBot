@@ -3,7 +3,10 @@ import os
 from datetime import datetime, timezone, timedelta
 import discord
 from discord.ext import commands, tasks
+import logging
+from get_info_traveling_spirits import refresh_traveling_spirit
 
+logger = logging.getLogger(__name__)
 
 class SkyEvents(commands.Cog):
     def __init__(self, bot):
@@ -33,6 +36,20 @@ class SkyEvents(commands.Cog):
 
     def cog_unload(self):
         self.events_checker.cancel()
+
+
+    def update_traveling_spirit_in_memory(self, event):
+        scheduled_events = self.events_data.setdefault(
+            "scheduled_events", []
+        )
+
+        for index, existing in enumerate(scheduled_events):
+            if existing.get("id") == "traveling_spirit_current":
+                scheduled_events[index] = event
+                return
+
+        scheduled_events.append(event)
+
 
     # ---------------------------------------------------------
     # تسمية موجات ثوران الشظايا لغوياً
@@ -103,72 +120,104 @@ class SkyEvents(commands.Cog):
         # =====================================================
         # 1. إرسال ملخص بداية اليوم الجديد (قناة الخلاصة وقناة الشظايا)
         # =====================================================
+
         if minutes_since_reset <= 5:
             reset_key = last_reset.strftime("%Y%m%d")
+
             if reset_key not in self.sent_daily_resets:
+
+                # 1. تحديث بيانات الروح قبل تجهيز الملخص اليومي
+                try:
+                    traveling_spirit = await refresh_traveling_spirit()
+
+                    # تحديث نسخة الأحداث المحفوظة في ذاكرة البوت
+                    self.update_traveling_spirit_in_memory(
+                        traveling_spirit
+                    )
+
+                    logger.info(
+                        "Traveling Spirit refreshed before daily summary: %s",
+                        traveling_spirit["name_en"],
+                    )
+
+                except Exception:
+                    # لا نمنع الملخص اليومي إذا تعذّر الوصول إلى الويكي.
+                    # ستبقى بيانات الروح السابقة في الذاكرة.
+                    logger.exception(
+                        "Failed to refresh Traveling Spirit before daily summary"
+                    )
+
+                # 2. تحديث قناة الشظايا
                 if shards_channel:
-                    await self.update_shards_daily_channel(shards_channel, last_reset)
+                    await self.update_shards_daily_channel(
+                        shards_channel, last_reset
+                    )
+
+                # 3. إرسال الملخص بعد محاولة تحديث الروح
                 if summary_channel:
-                    await self.send_daily_reset_summary(summary_channel, now_utc, last_reset)
+                    await self.send_daily_reset_summary(
+                        summary_channel, now_utc, last_reset
+                    )
+
                 self.sent_daily_resets.add(reset_key)
 
-        # =====================================================
-        # 2. فحص تنبيهات جولات ثوران الشظايا اللحظية (قناة الشظايا)
-        # =====================================================
-        if shards_channel:
-            await self.check_shard_alerts(shards_channel, minutes_since_reset, now_utc, last_reset)
+                # =====================================================
+                # 2. فحص تنبيهات جولات ثوران الشظايا اللحظية (قناة الشظايا)
+                # =====================================================
+                if shards_channel:
+                    await self.check_shard_alerts(shards_channel, minutes_since_reset, now_utc, last_reset)
 
-        # =====================================================
-        # 3. الأحداث الدورية (قناة الأحداث الدورية)
-        # =====================================================
-        if interval_channel:
-            for event in self.events_data.get("interval_events", []):
-                repeat_hours = event.get("repeat_interval_hours", 2)
-                cycle_minutes = repeat_hours * 60
+                # =====================================================
+                # 3. الأحداث الدورية (قناة الأحداث الدورية)
+                # =====================================================
+                if interval_channel:
+                    for event in self.events_data.get("interval_events", []):
+                        repeat_hours = event.get("repeat_interval_hours", 2)
+                        cycle_minutes = repeat_hours * 60
 
-                cycle_minute = minutes_since_reset % cycle_minutes
+                        cycle_minute = minutes_since_reset % cycle_minutes
 
-                alert_offset = event["alert_offset_minutes"]
-                start_offset = event["start_offset_minutes"]
-                end_offset = event["end_offset_minutes"]
+                        alert_offset = event["alert_offset_minutes"]
+                        start_offset = event["start_offset_minutes"]
+                        end_offset = event["end_offset_minutes"]
 
-                current_minute_key = now_minute.strftime("%Y%m%d%H%M")
+                        current_minute_key = now_minute.strftime("%Y%m%d%H%M")
 
-                if cycle_minute == alert_offset:
-                    alert_key = f"{event['id']}_alert_{current_minute_key}"
-                    if alert_key not in self.sent_alerts:
-                        await self.send_event_embed(
-                            interval_channel,
-                            event,
-                            "🔔",
-                            "سيبدأ الحدث بعد قليل! • Starting soon!",
-                            discord.Color.gold(),
-                        )
-                        self.sent_alerts.add(alert_key)
+                        if cycle_minute == alert_offset:
+                            alert_key = f"{event['id']}_alert_{current_minute_key}"
+                            if alert_key not in self.sent_alerts:
+                                await self.send_event_embed(
+                                    interval_channel,
+                                    event,
+                                    "🔔",
+                                    "سيبدأ الحدث بعد قليل! • Starting soon!",
+                                    discord.Color.gold(),
+                                )
+                                self.sent_alerts.add(alert_key)
 
-                elif cycle_minute == start_offset:
-                    alert_key = f"{event['id']}_start_{current_minute_key}"
-                    if alert_key not in self.sent_alerts:
-                        await self.send_event_embed(
-                            interval_channel,
-                            event,
-                            "🟢",
-                            "بدأ الحدث الآن! • Started now!",
-                            discord.Color.green(),
-                        )
-                        self.sent_alerts.add(alert_key)
+                        elif cycle_minute == start_offset:
+                            alert_key = f"{event['id']}_start_{current_minute_key}"
+                            if alert_key not in self.sent_alerts:
+                                await self.send_event_embed(
+                                    interval_channel,
+                                    event,
+                                    "🟢",
+                                    "بدأ الحدث الآن! • Started now!",
+                                    discord.Color.green(),
+                                )
+                                self.sent_alerts.add(alert_key)
 
-                elif cycle_minute == (end_offset % cycle_minutes):
-                    alert_key = f"{event['id']}_end_{current_minute_key}"
-                    if alert_key not in self.sent_alerts:
-                        await self.send_event_embed(
-                            interval_channel,
-                            event,
-                            "🔴",
-                            "انتهى الحدث الآن. • Ended now.",
-                            discord.Color.red(),
-                        )
-                        self.sent_alerts.add(alert_key)
+                        elif cycle_minute == (end_offset % cycle_minutes):
+                            alert_key = f"{event['id']}_end_{current_minute_key}"
+                            if alert_key not in self.sent_alerts:
+                                await self.send_event_embed(
+                                    interval_channel,
+                                    event,
+                                    "🔴",
+                                    "انتهى الحدث الآن. • Ended now.",
+                                    discord.Color.red(),
+                                )
+                                self.sent_alerts.add(alert_key)
 
         # =====================================================
         # 4. الأحداث المجدولة (قناة الخلاصة)

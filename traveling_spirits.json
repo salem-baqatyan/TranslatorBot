@@ -1,0 +1,592 @@
+{
+"Greeting Shaman": {
+"name_ar": "الساحر المرحب",
+"realm": "Vault of Knowledge",
+"area": "Fourth Floor"
+},
+"Saluting Protector": {
+"name_ar": "الحارس المتبختر",
+"realm": "Golden Wasteland",
+"area": "Graveyard Entrance"
+},
+"Leaping Dancer": {
+"name_ar": "الراقص الوثاب",
+"realm": "Valley of Triumph",
+"area": "Frozen Lake"
+},
+"Provoking Performer": {
+"name_ar": "المؤدي المستفز",
+"realm": "Hidden Forest",
+"area": "Forest's Brook"
+},
+"Stretching Guru": {
+"name_ar": "معلم التمدد",
+"realm": "Daylight Prairie",
+"area": "Prairie Caves"
+},
+"Sassy Drifter": {
+"name_ar": "المتنقل المشاكس",
+"realm": "Isle of Dawn",
+"area": "Isle of Dawn"
+},
+"Shushing Light Scholar": {
+"name_ar": "عالم النور",
+"realm": "Vault of Knowledge",
+"area": "Fourth Floor"
+},
+"Crab Whisperer": {
+"name_ar": "همّاس السلطعونات",
+"realm": "Golden Wasteland",
+"area": "Crab Fields"
+},
+"Twirling Champion": {
+"name_ar": "بطل الدوران",
+"realm": "Valley of Triumph",
+"area": "Frozen Lake"
+},
+"Laidback Pioneer": {
+"name_ar": "المستكشف المسترخ",
+"realm": "Hidden Forest",
+"area": "Forest's Brook"
+},
+"Doublefive Light Catcher": {
+"name_ar": "صائد النور",
+"realm": "Daylight Prairie",
+"area": "Bird Nest"
+},
+"Piggyback Lightseeker": {
+"name_ar": "باحث النور",
+"realm": "Isle of Dawn",
+"area": "Isle of Dawn"
+},
+"Wise Grandparent": {
+"name_ar": "الجد الحكيم",
+"realm": "Vault of Knowledge",
+"area": "Vault Archive"
+},
+"Pleaful Parent": {
+"name_ar": "الأب المتوسل",
+"realm": "Golden Wasteland",
+"area": "Graveyard"
+},
+"Sparkler Parent": {
+"name_ar": "الأب الشرارة",
+"realm": "Valley of Triumph",
+"area": "Valley Temple"
+},
+"Hairtousle Teen": {
+"name_ar": "المراهق الأشعث",
+"realm": "Hidden Forest",
+"area": "Underground Caverns"
+},
+"Confetti Cousin": {
+"name_ar": "القريب المرح",
+"realm": "Daylight Prairie",
+"area": "Butterfly Fields"
+},
+"Boogie Kid": {
+"name_ar": "فتى الرقص",
+"realm": "Isle of Dawn",
+"area": "Dawn Overlook"
+},
+"Thoughtful Director": {
+"name_ar": "المخرج المتأمل",
+"realm": "Vault of Knowledge",
+"area": "First Floor"
+},
+"Respectful Pianist": {
+"name_ar": "عازف البيانو",
+"realm": "Golden Wasteland",
+"area": "Graveyard"
+},
+"Troupe Juggler": {
+"name_ar": "لاعب الخفة",
+"realm": "Valley of Triumph",
+"area": "Frozen Lake"
+},
+"Admiring Actor": {
+"name_ar": "الممثل المعجب",
+"realm": "Hidden Forest",
+"area": "Forest Boneyard"
+},
+"Festival Spin Dancer": {
+"name_ar": "راقص المهرجانات",
+"realm": "Daylight Prairie",
+"area": "Bird Nest"
+},
+"Troupe Greeter": {
+"name_ar": "مرحب الفرقة",
+"realm": "Isle of Dawn",
+"area": "Isle of Dawn"
+},
+"Daydream Forester": {
+"name_ar": "حارس الغابة",
+"realm": "Hidden Forest",
+"area": "Forest Boneyard"
+},
+"Chuckling Scout": {
+"name_ar": "الكشافة المتبسمة",
+"realm": "Hidden Forest",
+"area": "Forest Boneyard"
+},
+"Marching Adventurer": {
+"name_ar": "المغامر المسير",
+"realm": "Hidden Forest",
+"area": "Forest's Brook"
+},
+"Scaredy Cadet": {
+"name_ar": "المتدرب الجبان",
+"realm": "Hidden Forest",
+"area": "Forest's Brook"
+},
+"Scolding Student": {
+"name_ar": "الطالب المعنف",
+"realm": "Hidden Forest",
+"area": "Forest Courtyard"
+},
+"Baffled Botanist": {
+"name_ar": "عالم النبات",
+"realm": "Hidden Forest",
+"area": "Forest Courtyard"
+},
+"Nodding Muralist": {
+"name_ar": "رسام الجداريات",
+"realm": "Golden Wasteland",
+"area": "Forgotten Ark"
+},
+"Indifferent Alchemist": {
+"name_ar": "الكيميائي المبالي",
+"realm": "Golden Wasteland",
+"area": "Forgotten Ark"
+},
+"Crab Walker": {
+"name_ar": "سائر السلطعون",
+"realm": "Golden Wasteland",
+"area": "Forgotten Ark"
+},
+"Scarecrow Farmer": {
+"name_ar": "مزارع الفزاعة",
+"realm": "Golden Wasteland",
+"area": "Forgotten Ark"
+},
+"Snoozing Carpenter": {
+"name_ar": "النجار الناعس",
+"realm": "Golden Wasteland",
+"area": "Forgotten Ark"
+},
+"Playfighting Herbalist": {
+"name_ar": "العشّاب المداعب",
+"realm": "Golden Wasteland",
+"area": "Forgotten Ark"
+},
+"Jelly Whisperer": {
+"name_ar": "همّاس القناديل",
+"realm": "Daylight Prairie",
+"area": "Sanctuary Islands"
+},
+"Timid Bookworm": {
+"name_ar": "دودة الكتب",
+"realm": "Daylight Prairie",
+"area": "Sanctuary Islands"
+},
+"Rallying Thrillseeker": {
+"name_ar": "باحث الإثارة",
+"realm": "Daylight Prairie",
+"area": "Sanctuary Islands"
+},
+"Hiking Grouch": {
+"name_ar": "المتذمر المتجول",
+"realm": "Daylight Prairie",
+"area": "Sanctuary Islands"
+},
+"Grateful Shell Collector": {
+"name_ar": "جامع الأصداف",
+"realm": "Daylight Prairie",
+"area": "Sanctuary Islands"
+},
+"Chill Sunbather": {
+"name_ar": "مستمتع الشمس",
+"realm": "Daylight Prairie",
+"area": "Sanctuary Islands"
+},
+"Prophet of Water": {
+"name_ar": "نبي الماء",
+"realm": "Isle of Dawn",
+"area": "Cave of Prophecies"
+},
+"Prophet of Earth": {
+"name_ar": "نبي الأرض",
+"realm": "Isle of Dawn",
+"area": "Cave of Prophecies"
+},
+"Prophet of Air": {
+"name_ar": "نبي الهواء",
+"realm": "Isle of Dawn",
+"area": "Cave of Prophecies"
+},
+"Prophet of Fire": {
+"name_ar": "نبي النار",
+"realm": "Isle of Dawn",
+"area": "Cave of Prophecies"
+},
+"Spinning Mentor": {
+"name_ar": "مرشد الدوران",
+"realm": "Valley of Triumph",
+"area": "Village of Dreams"
+},
+"Dancing Performer": {
+"name_ar": "مؤدي الرقص",
+"realm": "Valley of Triumph",
+"area": "Village of Dreams"
+},
+"Peeking Postman": {
+"name_ar": "ساعي البريد",
+"realm": "Valley of Triumph",
+"area": "Village of Dreams"
+},
+"Bearhug Hermit": {
+"name_ar": "الناسك المعانق",
+"realm": "Valley of Triumph",
+"area": "Village of Dreams"
+},
+"Beckoning Ruler": {
+"name_ar": "الحاكم الآمر",
+"realm": "Vault of Knowledge",
+"area": "Starlight Desert"
+},
+"Gloating Narcissist": {
+"name_ar": "النرجسي المغتر",
+"realm": "Vault of Knowledge",
+"area": "Starlight Desert"
+},
+"Stretching Lamplighter": {
+"name_ar": "حارق المصابيح",
+"realm": "Vault of Knowledge",
+"area": "Starlight Desert"
+},
+"Slouching Soldier": {
+"name_ar": "الجندي المترهل",
+"realm": "Vault of Knowledge",
+"area": "Starlight Desert"
+},
+"Sneezing Geographer": {
+"name_ar": "الجغرافي العطاس",
+"realm": "Vault of Knowledge",
+"area": "Starlight Desert"
+},
+"Star Collector": {
+"name_ar": "جامع النجوم",
+"realm": "Vault of Knowledge",
+"area": "Starlight Desert"
+},
+"Lively Navigator": {
+"name_ar": "الملاح الحيوي",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Light Whisperer": {
+"name_ar": "همّاس النور",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Tinkering Chimesmith": {
+"name_ar": "صانع الأجراس",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Talented Builder": {
+"name_ar": "البناء الموهوب",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Anxious Angler": {
+"name_ar": "الصياد القلق",
+"realm": "Golden Wasteland",
+"area": "Treasure Reef"
+},
+"Ceasing Commodore": {
+"name_ar": "العميد البحري",
+"realm": "Golden Wasteland",
+"area": "Treasure Reef"
+},
+"Bumbling Boatswain": {
+"name_ar": "رئيس البحارة",
+"realm": "Golden Wasteland",
+"area": "Treasure Reef"
+},
+"Cackling Cannoneer": {
+"name_ar": "المدفعي الضاحك",
+"realm": "Golden Wasteland",
+"area": "Treasure Reef"
+},
+"Frantic Stagehand": {
+"name_ar": "عامل المسرح",
+"realm": "Valley of Triumph",
+"area": "Village Theater"
+},
+"Forgetful Storyteller": {
+"name_ar": "الحكواتي الناسي",
+"realm": "Valley of Triumph",
+"area": "Village Theater"
+},
+"Mellow Musician": {
+"name_ar": "الموسيقي الهادئ",
+"realm": "Valley of Triumph",
+"area": "Village Theater"
+},
+"Modest Dancer": {
+"name_ar": "الراقص المتواضع",
+"realm": "Valley of Triumph",
+"area": "Village Theater"
+},
+"Running Wayfarer": {
+"name_ar": "الرحالة الجاري",
+"realm": "Valley of Triumph",
+"area": "Coliseum"
+},
+"Mindful Miner": {
+"name_ar": "المنقب الواعي",
+"realm": "Valley of Triumph",
+"area": "Coliseum"
+},
+"Warrior of Love": {
+"name_ar": "محارب الحب",
+"realm": "Valley of Triumph",
+"area": "Coliseum"
+},
+"Seed of Hope": {
+"name_ar": "بذرة الأمل",
+"realm": "Valley of Triumph",
+"area": "Coliseum"
+},
+"Bereft Veteran": {
+"name_ar": "المخضرم المكلوم",
+"realm": "Vault of Knowledge",
+"area": "Repository of Refuge"
+},
+"Tiptoeing Tea-Brewer": {
+"name_ar": "صانع الشاي",
+"realm": "Vault of Knowledge",
+"area": "Repository of Refuge"
+},
+"Wounded Warrior": {
+"name_ar": "المحارب الجريح",
+"realm": "Vault of Knowledge",
+"area": "Repository of Refuge"
+},
+"Pleading Child": {
+"name_ar": "الطفل المتوسل",
+"realm": "Vault of Knowledge",
+"area": "Repository of Refuge"
+},
+"Oddball Outcast": {
+"name_ar": "المنبوذ الغريب",
+"realm": "Isle of Dawn",
+"area": "Passage Stone"
+},
+"Tumbling Troublemaker": {
+"name_ar": "الشاغب المتعثر",
+"realm": "Isle of Dawn",
+"area": "Passage Stone"
+},
+"Melancholy Mope": {
+"name_ar": "الكئيب الحزين",
+"realm": "Isle of Dawn",
+"area": "Passage Stone"
+},
+"Overactive Overachiever": {
+"name_ar": "المجتهد المفرط",
+"realm": "Isle of Dawn",
+"area": "Passage Stone"
+},
+"Reassuring Ranger": {
+"name_ar": "الحارس المطمئن",
+"realm": "Daylight Prairie",
+"area": "Prairie Peaks"
+},
+"Nightbird Whisperer": {
+"name_ar": "همّاس الطيور",
+"realm": "Daylight Prairie",
+"area": "Prairie Peaks"
+},
+"Jolly Geologist": {
+"name_ar": "الجيولوجي البهيج",
+"realm": "Daylight Prairie",
+"area": "Prairie Peaks"
+},
+"Ascetic Monk": {
+"name_ar": "الراهب الزاهد",
+"realm": "Daylight Prairie",
+"area": "Prairie Peaks"
+},
+"Herb Gatherer": {
+"name_ar": "جامع الأعشاب",
+"realm": "Vault of Knowledge",
+"area": "Crescent Oasis"
+},
+"Hunter": {
+"name_ar": "الصياد الماهر",
+"realm": "Vault of Knowledge",
+"area": "Crescent Oasis"
+},
+"Feudal Lord": {
+"name_ar": "السيد الإقطاعي",
+"realm": "Vault of Knowledge",
+"area": "Crescent Oasis"
+},
+"Princess": {
+"name_ar": "الأميرة النبيلة",
+"realm": "Vault of Knowledge",
+"area": "Crescent Oasis"
+},
+"Compassionate Cellist": {
+"name_ar": "عازف التشيلو",
+"realm": "Aviary Village",
+"area": "Concert Hall"
+},
+"Radiance Leaping Dancer": {
+"name_ar": "الراقص الوثاب",
+"realm": "Aviary Village",
+"area": "Dye Workshop"
+},
+"Radiance Provoking Performer": {
+"name_ar": "المؤدي المستفز",
+"realm": "Aviary Village",
+"area": "Dye Workshop"
+},
+"Radiance Greeting Shaman": {
+"name_ar": "الساحر المرحب",
+"realm": "Aviary Village",
+"area": "Dye Workshop"
+},
+"Costumed Confetti Cousin": {
+"name_ar": "القريب المتنكر",
+"realm": "Hidden Forest",
+"area": "Blue Bird Theater"
+},
+"Divining Wise Grandparent": {
+"name_ar": "الجد العراف",
+"realm": "Hidden Forest",
+"area": "Blue Bird Theater"
+},
+"Nostalgic Sparkler Parent": {
+"name_ar": "الأب الحنيني",
+"realm": "Hidden Forest",
+"area": "Blue Bird Theater"
+},
+"Royal Hairtousle Teen": {
+"name_ar": "المراهق الملكي",
+"realm": "Hidden Forest",
+"area": "Blue Bird Theater"
+},
+"Woodcutting Pleaful Parent": {
+"name_ar": "الأب الحاطب",
+"realm": "Hidden Forest",
+"area": "Blue Bird Theater"
+},
+"Tender Toymaker": {
+"name_ar": "صانع الألعاب",
+"realm": "Golden Wasteland",
+"area": "The Last City"
+},
+"Resourceful Recluse": {
+"name_ar": "الناسك المدبر",
+"realm": "Golden Wasteland",
+"area": "The Last City"
+},
+"Stern Shepherd": {
+"name_ar": "الراعي الحازم",
+"realm": "Golden Wasteland",
+"area": "The Last City"
+},
+"Scarred Sentry": {
+"name_ar": "الحارس النديب",
+"realm": "Golden Wasteland",
+"area": "The Last City"
+},
+"Migrating Bellmaker": {
+"name_ar": "صانع الأجراس",
+"realm": "Isle of Dawn",
+"area": "Isle of Dawn"
+},
+"Migrating Bird Whisperer": {
+"name_ar": "همّاس الطيور",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Migrating Butterfly Charmer": {
+"name_ar": "ساحر الفراشات",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Migrating Jelly Whisperer": {
+"name_ar": "همّاس القناديل",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Migrating Manta Whisperer": {
+"name_ar": "همّاس المنتا",
+"realm": "Hidden Forest",
+"area": "Wind Paths"
+},
+"Lightmending Champion": {
+"name_ar": "بطل الإصلاح",
+"realm": "Vault of Knowledge",
+"area": "Fractured Lantern Storage"
+},
+"Lightmending Light Catcher": {
+"name_ar": "صائد النور",
+"realm": "Vault of Knowledge",
+"area": "Fractured Lantern Storage"
+},
+"Lightmending Light Scholar": {
+"name_ar": "عالم النور",
+"realm": "Vault of Knowledge",
+"area": "Fractured Lantern Storage"
+},
+"Lightmending Pioneer": {
+"name_ar": "رائد الإصلاح",
+"realm": "Vault of Knowledge",
+"area": "Fractured Lantern Storage"
+},
+"Carnival Juggler": {
+"name_ar": "لاعب الخفة",
+"realm": "Aviary Village",
+"area": "Wandering Carnival"
+},
+"Carnival Athletic Dancer": {
+"name_ar": "الراقص الرياضي",
+"realm": "Aviary Village",
+"area": "Wandering Carnival"
+},
+"Carnival Stunt Actor": {
+"name_ar": "ممثل الحركات",
+"realm": "Aviary Village",
+"area": "Wandering Carnival"
+},
+"Carnival Puzzle Director": {
+"name_ar": "مخرج الألغاز",
+"realm": "Aviary Village",
+"area": "Wandering Carnival"
+},
+"Cuddly Rolling Child": {
+"name_ar": "الطفل المدلل",
+"realm": "Golden Wasteland",
+"area": "Pearl Village"
+},
+"Old Angler": {
+"name_ar": "الصياد العجوز",
+"realm": "Golden Wasteland",
+"area": "Pearl Village"
+},
+"Showy Merchant": {
+"name_ar": "التاجر المتبجح",
+"realm": "Golden Wasteland",
+"area": "Pearl Village"
+},
+"Wrestling Sailor": {
+"name_ar": "البحار المصارع",
+"realm": "Golden Wasteland",
+"area": "Pearl Village"
+}
+}

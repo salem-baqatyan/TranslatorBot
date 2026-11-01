@@ -1,6 +1,6 @@
 {
   "config": {
-    "daily_reset_utc": "07:00"
+    "daily_reset_utc": "08:00"
   },
   "interval_events": [
     {
